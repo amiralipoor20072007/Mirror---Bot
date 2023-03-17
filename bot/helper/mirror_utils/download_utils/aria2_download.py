@@ -4,6 +4,7 @@ from aiofiles.os import remove as aioremove, path as aiopath
 from asyncio import sleep
 
 from bot import aria2, download_dict_lock, download_dict, LOGGER, config_dict, aria2_options, aria2c_global
+from bot.helper.listener import MirrorLeechListener
 from bot.helper.mirror_utils.upload_utils.gdriveTools import GoogleDriveHelper
 from bot.helper.ext_utils.bot_utils import getDownloadByGid, bt_selection_buttons, new_thread, sync_to_async
 from bot.helper.mirror_utils.status_utils.aria_download_status import AriaDownloadStatus
@@ -88,7 +89,8 @@ async def __onDownloadComplete(api, gid):
         if dl := await getDownloadByGid(gid):
             listener = dl.listener()
             await listener.onDownloadComplete()
-            await sync_to_async(api.remove, [download], force=True, files=True)
+            if listener.completed_mt:
+                await sync_to_async(api.remove, [download], force=True, files=True)
 
 @new_thread
 async def __onBtDownloadComplete(api, gid):
@@ -97,7 +99,7 @@ async def __onBtDownloadComplete(api, gid):
     download = await sync_to_async(api.get_download, gid)
     LOGGER.info(f"onBtDownloadComplete: {download.name} - Gid: {gid}")
     if dl := await getDownloadByGid(gid):
-        listener = dl.listener()
+        listener : MirrorLeechListener = dl.listener()
         if listener.select:
             res = download.files
             for file_o in res:
@@ -135,7 +137,7 @@ async def __onBtDownloadComplete(api, gid):
                     download_dict[listener.uid].start_time = seed_start_time
                 LOGGER.info(f"Seeding started: {download.name} - Gid: {gid}")
                 await update_all_messages()
-        else:
+        elif listener.completed_mt:
             await sync_to_async(api.remove, [download], force=True, files=True)
 
 @new_thread

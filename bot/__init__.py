@@ -59,6 +59,10 @@ status_reply_dict = {}
 download_dict = {}
 rss_dict = {}
 
+#added
+multi_task_manager_dict_lock = Lock()
+multi_task_manager_dict = {}
+
 BOT_TOKEN = environ.get('BOT_TOKEN', '')
 if len(BOT_TOKEN) == 0:
     log_error("BOT_TOKEN variable is missing! Exiting now")

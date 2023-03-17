@@ -5,8 +5,10 @@ from os import walk, path as ospath
 from html import escape
 from aioshutil import move
 from asyncio import create_subprocess_exec, sleep, Event
+from pyrogram.types import Message
 
 from bot import Interval, aria2, DOWNLOAD_DIR, download_dict, download_dict_lock, LOGGER, DATABASE_URL, MAX_SPLIT_SIZE, config_dict, status_reply_dict_lock, user_data, non_queued_up, non_queued_dl, queued_up, queued_dl, queue_dict_lock
+from bot.helper.MultiTasksManager import Multi_Tasks_Manager
 from bot.helper.ext_utils.bot_utils import sync_to_async
 from bot.helper.ext_utils.fs_utils import get_base_name, get_path_size, split_file, clean_download, clean_target, is_first_archive_split, is_archive, is_archive_split
 from bot.helper.ext_utils.exceptions import NotSupportedExtractionArchive
@@ -25,9 +27,14 @@ from bot.helper.ext_utils.db_handler import DbManger
 
 
 class MirrorLeechListener:
-    def __init__(self, message, isZip=False, extract=False, isQbit=False, isLeech=False, pswd=None, tag=None, select=False, seed=False, sameDir={}):
+    def __init__(self, message:Message, isZip=False, extract=False, isQbit=False,
+                isLeech=False, pswd=None, tag=None, select=False, seed=False,
+                sameDir={},directory="",multi_manager:Multi_Tasks_Manager=None,
+                time:str=None):
+        
         self.message = message
         self.uid = message.id
+        self.user_id = self.message.from_user.id
         self.extract = extract
         self.isZip = isZip
         self.isQbit = isQbit
@@ -36,12 +43,15 @@ class MirrorLeechListener:
         self.tag = tag
         self.seed = seed
         self.newDir = ""
-        self.dir = f"{DOWNLOAD_DIR}{self.uid}"
+        self.dir = f"{DOWNLOAD_DIR}{self.uid}" if not directory else directory
         self.select = select
         self.isSuperGroup = message.chat.type.name in ['SUPERGROUP', 'CHANNEL']
         self.suproc = None
         self.queuedUp = None
         self.sameDir = sameDir
+
+        self.multi_manager = multi_manager 
+        self.time = time
 
     async def clean(self):
         try:
@@ -59,6 +69,9 @@ class MirrorLeechListener:
             await DbManger().add_incomplete_task(self.message.chat.id, self.message.link, self.tag)
 
     async def onDownloadComplete(self):
+        self.completed_mt = self.multi_manager.check_completed() if self.multi_manager is not None else True
+        if not self.completed_mt :
+            return await self.multi_manager.downloader()
         if len(self.sameDir) == 1:
             await sleep(3)
         multi_links = False
@@ -84,7 +97,11 @@ class MirrorLeechListener:
             return
         if name == "None" or self.isQbit or not await aiopath.exists(f"{self.dir}/{name}"):
             name = (await listdir(self.dir))[-1]
-        m_path = f"{self.dir}/{name}"
+        if self.multi_manager is None:
+            m_path = f"{self.dir}/{name}"
+        else:
+            name = f"{self.user_id}.MultiTask.{self.time}"
+            m_path = f"{self.dir}"
         size = await get_path_size(m_path)
         async with queue_dict_lock:
             if self.uid in non_queued_dl:

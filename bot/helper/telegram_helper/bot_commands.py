@@ -47,4 +47,14 @@ class _BotCommands:
         self.BtSelectCommand = f'btsel{CMD_SUFFIX}'
         self.RssCommand = f'rss{CMD_SUFFIX}'
 
+        #Added
+        self.Multi_Zip_Start = f'mzp{CMD_SUFFIX}'
+        
+        self.Multi_Leech_Start = f'mls{CMD_SUFFIX}'
+
+        self.Multi_Zip_Leech_Start = f'mzls{CMD_SUFFIX}'
+
+        self.Multi_End = f'mze{CMD_SUFFIX}'
+
+
 BotCommands = _BotCommands()

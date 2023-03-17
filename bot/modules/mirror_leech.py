@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
 from pyrogram.handlers import MessageHandler
 from pyrogram.filters import command
+from pyrogram.types import Message
 from base64 import b64encode
-from re import match as re_match, split as re_split
+from re import match as re_match, split as re_split , findall as re_findall
 from asyncio import sleep
 from aiofiles.os import path as aiopath
 
-from bot import bot, DOWNLOAD_DIR, LOGGER, config_dict
+from bot import bot, DOWNLOAD_DIR, LOGGER, config_dict,multi_task_manager_dict_lock,multi_task_manager_dict
+from bot.helper.MultiTasksManager import Multi_Tasks_Manager
 from bot.helper.ext_utils.bot_utils import is_url, is_magnet, is_mega_link, is_gdrive_link, get_content_type, new_task, sync_to_async
 from bot.helper.ext_utils.exceptions import DirectDownloadLinkException
 from bot.helper.mirror_utils.download_utils.aria2_download import add_aria2c_download
@@ -265,3 +267,76 @@ bot.add_handler(MessageHandler(zip_leech, filters=command(BotCommands.ZipLeechCo
 bot.add_handler(MessageHandler(qb_leech, filters=command(BotCommands.QbLeechCommand) & CustomFilters.authorized))
 bot.add_handler(MessageHandler(qb_unzip_leech, filters=command(BotCommands.QbUnzipLeechCommand) & CustomFilters.authorized))
 bot.add_handler(MessageHandler(qb_zip_leech, filters=command(BotCommands.QbZipLeechCommand) & CustomFilters.authorized))
+
+#Added
+async def Multi_Zip_Start(client, message:Message):
+    try:
+        pswdd = re_findall(r" pswd:(.*?) ",message.text)[0]
+    except:
+        pswdd = None
+
+    try:
+        ussr,pssw = re_findall(r" auth:(.*?)=(.*?) ",message.text)[0]
+        auth = f"{ussr}:{pssw}"
+        auth = "Basic " + b64encode(auth.encode()).decode('ascii')
+    except:
+        auth = ''
+
+    Multi_Task = Multi_Tasks_Manager(client,chat_id=message.chat.id,start_message=message,
+                                     isZip=True,pswd=pswdd,authen=auth)
+    
+    async with multi_task_manager_dict_lock :
+        multi_task_manager_dict[message.from_user.id] = Multi_Task
+
+
+async def Multi_Leech_Start(client, message):
+    try:
+        pswdd = re_findall(r" pswd:(.*?) ",message.text)[0]
+    except:
+        pswdd = None
+
+    try:
+        ussr,pssw = re_findall(r" auth:(.*?)=(.*?) ",message.text)[0]
+        auth = f"{ussr}:{pssw}"
+        auth = "Basic " + b64encode(auth.encode()).decode('ascii')
+    except:
+        auth = ''
+
+    Multi_Task = Multi_Tasks_Manager(client,chat_id=message.chat.id,start_message=message,
+                                     isLeech=True,pswd=pswdd,authen=auth)
+    
+    async with multi_task_manager_dict_lock :
+        multi_task_manager_dict[message.from_user.id] = Multi_Task
+
+async def Multi_Zip_Leech_Start(client, message):
+    try:
+        pswdd = re_findall(r" pswd:(.*?) ",message.text)[0]
+    except:
+        pswdd = None
+
+    try:
+        ussr,pssw = re_findall(r" auth:(.*?)=(.*?) ",message.text)[0]
+        auth = f"{ussr}:{pssw}"
+        auth = "Basic " + b64encode(auth.encode()).decode('ascii')
+    except:
+        auth = ''
+
+    Multi_Task = Multi_Tasks_Manager(client,chat_id=message.chat.id,start_message=message,isZip=True,
+                                     isLeech=True,pswd=pswdd,authen=auth)
+    
+    async with multi_task_manager_dict_lock :
+        multi_task_manager_dict[message.from_user.id] = Multi_Task
+
+async def Multi_End(client, message:Message):
+    async with multi_task_manager_dict_lock :
+        multi_task : Multi_Tasks_Manager = multi_task_manager_dict.get(message.from_user.id)
+    multi_task.set_end_message(message)
+    await multi_task.run()
+
+
+
+
+bot.add_handler(MessageHandler(Multi_Zip_Start, filters=command(BotCommands.Multi_Zip_Start) & CustomFilters.authorized))
+bot.add_handler(MessageHandler(Multi_Leech_Start, filters=command(BotCommands.Multi_Leech_Start) & CustomFilters.authorized))
+bot.add_handler(MessageHandler(Multi_Zip_Leech_Start, filters=command(BotCommands.Multi_Zip_Leech_Start) & CustomFilters.authorized))
+bot.add_handler(MessageHandler(Multi_End, filters=command(BotCommands.Multi_End) & CustomFilters.authorized))
