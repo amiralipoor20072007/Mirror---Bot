@@ -37,14 +37,15 @@ class Multi_Tasks_Manager():
         self.pswd = pswd
         self.isLeech = isLeech
 
+        
+    def set_end_message(self,message:Message):
+        self.end = message
+        self.end_id = self.end.id
         if username := self.end.from_user.username:
             self.tag = f"@{username}"
         else:
             self.tag = self.end.from_user.mention
 
-    def set_end_message(self,message:Message):
-        self.end = message
-        self.end_id = self.end.id
 
     def create_listener(self):
         self.listener = MirrorLeechListener(self.end,self.isZip,self.extract,False,
@@ -106,6 +107,7 @@ class Multi_Tasks_Manager():
         self.create_listener()
         await self.get_messages()
         if self.check_not_empty():
+            await sendMessage(self.end,"<b>Started To Do Your Tasks One by One!</b>")
             if self.medias:
                 self.TelegramDownloadHelper = TelegramDownloadHelper(self.listener)
             await self.downloader()
