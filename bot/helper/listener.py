@@ -8,7 +8,6 @@ from asyncio import create_subprocess_exec, sleep, Event
 from pyrogram.types import Message
 
 from bot import Interval, aria2, DOWNLOAD_DIR, download_dict, download_dict_lock, LOGGER, DATABASE_URL, MAX_SPLIT_SIZE, config_dict, status_reply_dict_lock, user_data, non_queued_up, non_queued_dl, queued_up, queued_dl, queue_dict_lock
-from bot.helper.MultiTasksManager import Multi_Tasks_Manager
 from bot.helper.ext_utils.bot_utils import sync_to_async
 from bot.helper.ext_utils.fs_utils import get_base_name, get_path_size, split_file, clean_download, clean_target, is_first_archive_split, is_archive, is_archive_split
 from bot.helper.ext_utils.exceptions import NotSupportedExtractionArchive
@@ -29,7 +28,7 @@ from bot.helper.ext_utils.db_handler import DbManger
 class MirrorLeechListener:
     def __init__(self, message:Message, isZip=False, extract=False, isQbit=False,
                 isLeech=False, pswd=None, tag=None, select=False, seed=False,
-                sameDir={},directory="",multi_manager:Multi_Tasks_Manager=None,
+                sameDir={},directory="",multi_manager=None,
                 time:str=None):
         
         self.message = message

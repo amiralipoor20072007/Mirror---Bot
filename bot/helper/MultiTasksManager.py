@@ -49,7 +49,9 @@ class Multi_Tasks_Manager():
     def create_listener(self):
         self.listener = MirrorLeechListener(self.end,self.isZip,self.extract,False,
                                             self.isLeech,self.pswd,self.tag,False,
-                                            False,directory=f"{DOWNLOAD_DIR}{self.user_id}.MultiTask.{self.time}")
+                                            False,{},
+                                            f"{DOWNLOAD_DIR}{self.user_id}.MultiTask.{self.time}",
+                                            self,self.time)
 
     async def get_messages(self):
         all_messages  = await self.client.get_messages(self.chat_id, list(range(self.start_id + 1,self.end_id)))
