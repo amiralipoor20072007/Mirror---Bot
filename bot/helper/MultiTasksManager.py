@@ -1,7 +1,7 @@
 import datetime
 from pyrogram.types import Message 
 
-from bot import DOWNLOAD_DIR, tgClient
+from bot import DOWNLOAD_DIR, tgClient ,LOGGER
 from bot.helper.ext_utils.bot_utils import is_url
 from bot.helper.listener import MirrorLeechListener
 from bot.helper.mirror_utils.download_utils.aria2_download import \
@@ -106,6 +106,7 @@ class Multi_Tasks_Manager():
     async def run(self):
         self.create_listener()
         await self.get_messages()
+        LOGGER.info(f"medias : {self.medias}")
         if self.check_not_empty():
             await sendMessage(self.end,"<b>Started To Do Your Tasks One by One!</b>")
             if self.medias:
