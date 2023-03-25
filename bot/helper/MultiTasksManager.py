@@ -87,6 +87,7 @@ class Multi_Tasks_Manager():
 
     async def downloader_medias(self):
         if self.medias:
+            LOGGER.info(f"medias len : {len(self.medias)}")
             await self.TelegramDownloadHelper.add_download(self.medias[0], f'{self.listener.dir}/', "")
             del self.medias[0]
     
