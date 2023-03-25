@@ -88,7 +88,7 @@ class TelegramDownloadHelper:
         elif not self.__is_cancelled:
             await self.__onDownloadError('Internal error occurred')
 
-    async def add_download(self, message, path, filename, from_queue=False):
+    async def add_download(self, message, path, filename, from_queue=False,multi=False):
         if IS_PREMIUM_USER:
             if not self.__listener.isSuperGroup:
                 await sendMessage(message, 'Use SuperGroup to download with User!')
@@ -107,7 +107,7 @@ class TelegramDownloadHelper:
                     path = path + name
                 size = media.file_size
                 gid = media.file_unique_id
-                if config_dict['STOP_DUPLICATE'] and not self.__listener.isLeech:
+                if config_dict['STOP_DUPLICATE'] and not self.__listener.isLeech and not multi:
                     LOGGER.info('Checking File/Folder if already in Drive...')
                     smsg, button = await sync_to_async(GoogleDriveHelper().drive_list, name, True, True)
                     if smsg:
