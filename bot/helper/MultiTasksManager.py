@@ -1,4 +1,5 @@
 import datetime
+from threading import Lock
 from pyrogram.types import Message 
 
 from bot import DOWNLOAD_DIR, tgClient ,LOGGER
@@ -9,6 +10,8 @@ from bot.helper.mirror_utils.download_utils.aria2_download import \
 from bot.helper.mirror_utils.download_utils.telegram_downloader import \
     TelegramDownloadHelper
 from bot.helper.telegram_helper.message_utils import sendMessage
+
+medias_lock = Lock()
 
 
 class Multi_Tasks_Manager():
@@ -86,10 +89,11 @@ class Multi_Tasks_Manager():
             del self.urls[0]
 
     async def downloader_medias(self):
-        if self.medias:
-            LOGGER.info(f"medias len : {len(self.medias)}")
-            await self.TelegramDownloadHelper.add_download(self.medias[0], f'{self.listener.dir}/', "")
-            del self.medias[0]
+        with medias_lock:
+            if self.medias:
+                LOGGER.info(f"medias len : {len(self.medias)}")
+                await self.TelegramDownloadHelper.add_download(self.medias[0], f'{self.listener.dir}/', "")
+                del self.medias[0]
     
     async def downloader(self):
         if self.urls:
