@@ -107,7 +107,7 @@ class Multi_Tasks_Manager():
     async def run(self):
         self.create_listener()
         await self.get_messages()
-        LOGGER.info(f"medias : {self.medias}")
+        # LOGGER.info(f"medias : {self.medias}")
         if self.check_not_empty():
             await sendMessage(self.end,"<b>Started To Do Your Tasks One by One!</b>")
             if self.medias:
