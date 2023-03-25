@@ -54,7 +54,7 @@ async def __onDownloadStarted(api, gid):
                     sname = get_base_name(sname)
                 except:
                     sname = None
-            if sname is not None:
+            if (sname is not None) and (listener.multi_manager is not None):
                 smsg, button = await sync_to_async(GoogleDriveHelper().drive_list, sname, True)
                 if smsg:
                     smsg = 'File/Folder already available in Drive.\nHere are the search results:'
