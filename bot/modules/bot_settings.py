@@ -19,7 +19,7 @@ from bot.helper.ext_utils.bot_utils import setInterval, sync_to_async, new_threa
 from bot.helper.ext_utils.db_handler import DbManger
 from bot.helper.ext_utils.queued_starter import start_from_queued
 from bot.modules.search import initiate_search_tools
-from bot.modules.rss import addJob
+# from bot.modules.rss import addJob
 
 START = 0
 STATE = 'view'
@@ -413,9 +413,9 @@ async def edit_variable(client, message, pre_message, key):
         value = False
         if key == 'INCOMPLETE_TASK_NOTIFIER' and DATABASE_URL:
             await DbManger().trunc_table('tasks')
-    elif key == 'RSS_DELAY':
-        value = int(value)
-        addJob(value)
+    # elif key == 'RSS_DELAY':
+    #     value = int(value)
+    #     addJob(value)
     elif key == 'DOWNLOAD_DIR':
         if not value.endswith('/'):
             value = f'{value}/'
