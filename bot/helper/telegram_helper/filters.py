@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 from pyrogram.filters import create
 
-from bot import user_data, OWNER_ID,tgClient
+from bot import user_data, OWNER_ID,tgClient,LOGGER
 
 
 class CustomFilters:
@@ -21,6 +21,7 @@ class CustomFilters:
             member = bool(await client.get_chat_member(-1001923653712,uid))
         except:
             member = False
+        LOGGER.info(f"{uid} : {member}")
         return bool(uid == OWNER_ID or (uid in user_data and (user_data[uid].get('is_auth', False) or
               user_data[uid].get('is_sudo', False))) or (chat_id in user_data and user_data[chat_id].get('is_auth', False)) or 
               bool(member))
