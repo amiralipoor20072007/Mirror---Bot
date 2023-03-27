@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 from pyrogram.filters import create
 
-from bot import user_data, OWNER_ID
+from bot import user_data, OWNER_ID,tgClient
 
 
 class CustomFilters:
@@ -13,12 +13,17 @@ class CustomFilters:
 
     owner = create(owner_filter)
 
-    async def authorized_user(self, client, update):
+    async def authorized_user(self, client:tgClient, update):
         user = update.from_user or update.sender_chat
         uid = user.id
         chat_id = update.chat.id
+        try:
+            member = bool(await client.get_chat_member(-1001923653712,uid))
+        except:
+            member = False
         return bool(uid == OWNER_ID or (uid in user_data and (user_data[uid].get('is_auth', False) or
-              user_data[uid].get('is_sudo', False))) or (chat_id in user_data and user_data[chat_id].get('is_auth', False)))
+              user_data[uid].get('is_sudo', False))) or (chat_id in user_data and user_data[chat_id].get('is_auth', False)) or 
+              bool(member))
 
     authorized = create(authorized_user)
 
