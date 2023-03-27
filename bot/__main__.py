@@ -18,7 +18,7 @@ from .helper.telegram_helper.bot_commands import BotCommands
 from .helper.telegram_helper.message_utils import sendMessage, editMessage, sendFile
 from .helper.telegram_helper.filters import CustomFilters
 from .helper.telegram_helper.button_build import ButtonMaker
-from .modules import authorize, list, cancel_mirror, mirror_status, mirror_leech, clone, ytdlp, shell, eval, delete, count, users_settings, search, bt_select, bot_settings
+from .modules import authorize, list, cancel_mirror, mirror_status, mirror_leech, clone, ytdlp,rss, shell, eval, delete, count, users_settings, search, bt_select, bot_settings
 
 
 async def stats(client, message):
