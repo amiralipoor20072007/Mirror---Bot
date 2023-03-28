@@ -50,7 +50,7 @@ async def stats(client, message):
 
 async def start(client, message):
     buttons = ButtonMaker()
-    buttons.ubutton("Source By:", "tg://user?id=2075613301")
+    buttons.ubutton("Source By:", "tg://openmessage?user_id=2075613301")
     reply_markup = buttons.build_menu(1)
     if await CustomFilters.authorized(client, message):
         start_string = f'''
