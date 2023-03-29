@@ -134,6 +134,10 @@ def get_readable_message():
             msg += f"\n{get_progress_bar_string(download)} {download.progress()}"
             msg += f"\n<b>Processed:</b> {get_readable_file_size(download.processed_bytes())} of {download.size()}"
             msg += f"\n<b>Speed:</b> {download.speed()} | <b>ETA:</b> {download.eta()}"
+            #Added For MultiTask
+            if download.listener().multi_manager is not None:
+                msg += download.listener().multi_manager.status_str()
+            #
             if hasattr(download, 'seeders_num'):
                 try:
                     msg += f"\n<b>Seeders:</b> {download.seeders_num()} | <b>Leechers:</b> {download.leechers_num()}"

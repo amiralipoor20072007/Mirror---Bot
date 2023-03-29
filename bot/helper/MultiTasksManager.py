@@ -40,7 +40,9 @@ class Multi_Tasks_Manager():
         self.pswd = pswd
         self.isLeech = isLeech
 
-        
+    def status_str(self):
+        f"Remaining Tasks {len(self.medias)+len(self.urls)}/{self.total_tasks}"
+
     def set_end_message(self,message:Message):
         self.end = message
         self.end_id = self.end.id
@@ -108,6 +110,7 @@ class Multi_Tasks_Manager():
     async def run(self):
         self.create_listener()
         await self.get_messages()
+        self.total_tasks = len(self.medias) + len(self.urls)
         if self.check_not_empty():
             await sendMessage(self.end,"<b>Started To Do Your Tasks One by One!</b>")
             if self.medias:
