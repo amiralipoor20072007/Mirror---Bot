@@ -25,8 +25,8 @@ PAGES = 0
 
 
 class MirrorStatus:
-    STATUS_UPLOADING = "Upload"
-    STATUS_DOWNLOADING = "Download"
+    STATUS_UPLOADING = "📤 Upload"
+    STATUS_DOWNLOADING = "📥 Download"
     STATUS_CLONING = "Clone"
     STATUS_QUEUEDL = "QueueDl"
     STATUS_QUEUEUP = "QueueUp"
@@ -132,8 +132,8 @@ def get_readable_message():
         msg += f"<code>{escape(str(download.name()))}</code>"
         if download.status() not in [MirrorStatus.STATUS_SPLITTING, MirrorStatus.STATUS_SEEDING]:
             msg += f"\n{get_progress_bar_string(download)} {download.progress()}"
-            msg += f"\n<b>Processed:</b> {get_readable_file_size(download.processed_bytes())} of {download.size()}"
-            msg += f"\n<b>Speed:</b> {download.speed()} | <b>ETA:</b> {download.eta()}"
+            msg += f"\n<b>🔄 Processed:</b> {get_readable_file_size(download.processed_bytes())} of {download.size()}"
+            msg += f"\n<b>⚡ Speed:</b> {download.speed()} |⏳ <b>ETA:</b> {download.eta()}"
             #Added For MultiTask
             try:
                 multitask_flag = bool(download.listener().multi_manager is not None)
@@ -155,7 +155,7 @@ def get_readable_message():
             msg += f" | <b>Time: </b>{download.seeding_time()}"
         else:
             msg += f"\n<b>Size: </b>{download.size()}"
-        msg += f"\n<code>/{BotCommands.CancelMirror} {download.gid()}</code>\n\n"
+        msg += f"\n💣 <code>/{BotCommands.CancelMirror} {download.gid()}</code>\n\n"
         if index == STATUS_LIMIT:
             break
     if len(msg) == 0:
@@ -188,9 +188,9 @@ def get_readable_message():
         buttons.ibutton(">>", "status nex")
         buttons.ibutton("♻️", "status ref")
         button = buttons.build_menu(3)
-    msg += f"<b>CPU:</b> {cpu_percent()}% | <b>FREE:</b> {get_readable_file_size(disk_usage(DOWNLOAD_DIR).free)}"
-    msg += f"\n<b>RAM:</b> {virtual_memory().percent}% | <b>UPTIME:</b> {get_readable_time(time() - botStartTime)}"
-    msg += f"\n<b>DL:</b> {get_readable_file_size(dl_speed)}/s | <b>UL:</b> {get_readable_file_size(up_speed)}/s"
+    msg += f"💻 <b>CPU:</b> {cpu_percent()}% |💽 <b>FREE:</b> {get_readable_file_size(disk_usage(DOWNLOAD_DIR).free)}"
+    msg += f"\n☣️ <b>RAM:</b> {virtual_memory().percent}% |⏳ <b>UPTIME:</b> {get_readable_time(time() - botStartTime)}"
+    msg += f"\n📥 <b>DL:</b> {get_readable_file_size(dl_speed)}/s |📤 <b>UL:</b> {get_readable_file_size(up_speed)}/s"
     return msg, button
 
 async def turn(data):
