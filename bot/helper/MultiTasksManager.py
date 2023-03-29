@@ -41,7 +41,7 @@ class Multi_Tasks_Manager():
         self.isLeech = isLeech
 
     def status_str(self):
-        return f"Remaining Tasks {len(self.medias)+len(self.urls)}/{self.total_tasks}"
+        return f"\nRemaining Tasks {len(self.medias)+len(self.urls)}/{self.total_tasks}"
 
     def set_end_message(self,message:Message):
         self.end = message
