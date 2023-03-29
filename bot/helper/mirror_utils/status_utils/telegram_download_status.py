@@ -7,6 +7,7 @@ class TelegramDownloadStatus:
         self.__obj = obj
         self.__gid = gid
         self.message = listener.message
+        self.__listener = listener
 
     def gid(self):
         return self.__gid
@@ -50,3 +51,6 @@ class TelegramDownloadStatus:
 
     def download(self):
         return self.__obj
+    
+    def listener(self):
+        return self.__listener

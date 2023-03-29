@@ -135,7 +135,7 @@ def get_readable_message():
             msg += f"\n<b>Processed:</b> {get_readable_file_size(download.processed_bytes())} of {download.size()}"
             msg += f"\n<b>Speed:</b> {download.speed()} | <b>ETA:</b> {download.eta()}"
             #Added For MultiTask
-            if download.listener().multi_manager is not None:
+            if (download.listener().multi_manager is not None) and (download.status() == MirrorStatus.STATUS_DOWNLOADING):
                 msg += download.listener().multi_manager.status_str()
             #
             if hasattr(download, 'seeders_num'):
