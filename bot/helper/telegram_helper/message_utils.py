@@ -18,6 +18,20 @@ async def sendMessage(message, text, buttons=None):
         LOGGER.error(str(e))
         return str(e)
 
+async def CopyMessage(chat_id,message, message_id,caption=None):
+    try:
+        return await bot.copy_message(chat_id=chat_id,
+                                        from_chat_id=message.chat.id,
+                                        message_id=message_id,
+                                        caption=caption)
+    except FloodWait as f:
+        LOGGER.warning(str(f))
+        await sleep(f.value * 1.5)
+        return await CopyMessage(chat_id,message, message_id,caption)
+    except Exception as e:
+        LOGGER.error(str(e))
+        return str(e)
+
 async def editMessage(message, text, buttons=None):
     try:
         await message.edit(text=text, disable_web_page_preview=True, reply_markup=buttons)

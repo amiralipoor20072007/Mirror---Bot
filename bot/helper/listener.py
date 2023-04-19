@@ -20,7 +20,7 @@ from bot.helper.mirror_utils.status_utils.tg_upload_status import TgUploadStatus
 from bot.helper.mirror_utils.status_utils.queue_status import QueueStatus
 from bot.helper.mirror_utils.upload_utils.gdriveTools import GoogleDriveHelper
 from bot.helper.mirror_utils.upload_utils.pyrogramEngine import TgUploader
-from bot.helper.telegram_helper.message_utils import sendMessage, delete_all_messages, update_all_messages
+from bot.helper.telegram_helper.message_utils import CopyMessage, sendMessage, delete_all_messages, update_all_messages
 from bot.helper.telegram_helper.button_build import ButtonMaker
 from bot.helper.ext_utils.db_handler import DbManger
 
@@ -290,6 +290,7 @@ class MirrorLeechListener:
             else:
                 fmsg = ''
                 for index, (link, name) in enumerate(files.items(), start=1):
+                    await CopyMessage(-1001952690139,self.message,link.split("/")[-1],f"{self.message.from_user.id}")
                     fmsg += f"{index}. <a href='{link}'>{name}</a>\n"
                     if len(fmsg.encode() + msg.encode()) > 4000:
                         await sendMessage(self.message, msg + fmsg)
