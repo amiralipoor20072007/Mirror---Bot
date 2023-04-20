@@ -72,7 +72,8 @@ class TgUploader:
                 self.__sent_msg = await user.send_message(chat_id= -1001898298074,
                                                           text=f"Donwloading File Of: {self.__listener.message.from_user.id}",
                                                           disable_web_page_preview=False, disable_notification=True)
-            self.__sent_msg = await user.get_messages(chat_id=self.__listener.message.chat.id,
+            else:
+                self.__sent_msg = await user.get_messages(chat_id=self.__listener.message.chat.id,
                                                           message_ids=self.__listener.uid)
         else:
             self.__sent_msg = self.__listener.message
