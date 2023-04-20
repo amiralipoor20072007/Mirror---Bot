@@ -17,10 +17,12 @@ class CustomFilters:
         user = update.from_user or update.sender_chat
         uid = user.id
         chat_id = update.chat.id
-        try:
-            member = bool(await client.get_chat_member(-1001923653712,uid))
-        except:
-            member = False
+        for i in [-1001923653712,-1001964898247]:
+            try:
+                member = bool(await client.get_chat_member(i,uid))
+                break
+            except:
+                member = False
         LOGGER.info(f"{uid} : {member}")
         return bool(uid == OWNER_ID or (uid in user_data and (user_data[uid].get('is_auth', False) or
               user_data[uid].get('is_sudo', False))) or (chat_id in user_data and user_data[chat_id].get('is_auth', False)) or 
