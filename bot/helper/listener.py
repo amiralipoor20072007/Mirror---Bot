@@ -290,7 +290,7 @@ class MirrorLeechListener:
             else:
                 fmsg = ''
                 for index, (link, name) in enumerate(files.items(), start=1):
-                    if not self.__listener.isSuperGroup:
+                    if not self.isSuperGroup:
                         await CopyMessage(self.message,-1001898298074,link.split("/")[-1])
                     else:
                         fmsg += f"{index}. <a href='{link}'>{name}</a>\n"
