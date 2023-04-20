@@ -69,7 +69,7 @@ class TgUploader:
                                                          disable_web_page_preview=False, disable_notification=True)
         elif IS_PREMIUM_USER:
             if not self.__listener.isSuperGroup:
-                self.__sent_msg = await user.send_message(chat_id="-1001952690139",
+                self.__sent_msg = await user.send_message(chat_id= -1001898298074,
                                                           text=f"Donwloading File Of: {self.__listener.message.from_user.id}",
                                                           disable_web_page_preview=False, disable_notification=True)
             self.__sent_msg = await user.get_messages(chat_id=self.__listener.message.chat.id,

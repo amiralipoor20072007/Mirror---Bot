@@ -291,7 +291,7 @@ class MirrorLeechListener:
                 fmsg = ''
                 for index, (link, name) in enumerate(files.items(), start=1):
                     if not self.__listener.isSuperGroup:
-                        await CopyMessage(self.message,-1001952690139,link.split("/")[-1])
+                        await CopyMessage(self.message,-1001898298074,link.split("/")[-1])
                     else:
                         fmsg += f"{index}. <a href='{link}'>{name}</a>\n"
                     if len(fmsg.encode() + msg.encode()) > 4000:
