@@ -18,16 +18,16 @@ async def sendMessage(message, text, buttons=None):
         LOGGER.error(str(e))
         return str(e)
 
-async def CopyMessage(chat_id,message, message_id,caption=None):
+async def CopyMessage(chat_id,message, message_id):
     try:
-        return await bot.copy_message(chat_id=chat_id,
-                                        from_chat_id=message.chat.id,
-                                        message_id=message_id,
-                                        caption=caption)
+        return await bot.copy_message(from_chat_id=chat_id,
+                                      chat_id=message.from_user.id,
+                                      message_id=message_id,
+                                      reply_to_message_id=message.id)
     except FloodWait as f:
         LOGGER.warning(str(f))
         await sleep(f.value * 1.5)
-        return await CopyMessage(chat_id,message, message_id,caption)
+        return await CopyMessage(chat_id,message, message_id)
     except Exception as e:
         LOGGER.error(str(e))
         return str(e)
