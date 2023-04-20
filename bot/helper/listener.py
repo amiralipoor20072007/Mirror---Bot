@@ -302,10 +302,11 @@ class MirrorLeechListener:
                     else:
                         fmsg += f"{index}. <a href='{link}'>{name}</a>\n"
                     if len(fmsg.encode() + msg.encode()) > 4000:
+                        used = True
                         await sendMessage(self.message, msg + fmsg)
                         await sleep(1)
                         fmsg = ''
-                if fmsg != '':
+                if fmsg != '' or not used:
                     await sendMessage(self.message, msg + fmsg)
             if self.seed:
                 if self.newDir:
