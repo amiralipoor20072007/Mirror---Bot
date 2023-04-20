@@ -286,6 +286,10 @@ class MirrorLeechListener:
                 msg += f'\n<b>Corrupted Files: </b>{typ}'
             msg += f'\n<b>cc: </b>{self.tag}\n\n'
             if not files:
+                if not self.isSuperGroup:
+                    Message_id = link.split("/")[-1]
+                    LOGGER.info(f"message.from_user.id = {self.message.from_user.id},Message_id = {Message_id}")
+                    await CopyMessage(-1001898298074,self.message,Message_id)
                 await sendMessage(self.message, msg)
             else:
                 fmsg = ''
