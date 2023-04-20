@@ -51,7 +51,10 @@ class TelegramDownloadHelper:
     async def __onDownloadProgress(self, current, total):
         if self.__is_cancelled:
             if IS_PREMIUM_USER:
-                user.stop_transmission()
+                if self.__listener.isSuperGroup:
+                    user.stop_transmission()
+                else:
+                    bot.stop_transmission()
             else:
                 bot.stop_transmission()
         self.downloaded_bytes = current
