@@ -301,6 +301,7 @@ class MirrorLeechListener:
                         await CopyMessage(-1001898298074,self.message,Message_id)
                     else:
                         fmsg += f"{index}. <a href='{link}'>{name}</a>\n"
+                    used = False
                     if len(fmsg.encode() + msg.encode()) > 4000:
                         used = True
                         await sendMessage(self.message, msg + fmsg)
