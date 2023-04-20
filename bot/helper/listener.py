@@ -290,6 +290,7 @@ class MirrorLeechListener:
             else:
                 fmsg = ''
                 for index, (link, name) in enumerate(files.items(), start=1):
+                    LOGGER.info(f"self.isSuperGroup : {self.isSuperGroup}")
                     if not self.isSuperGroup:
                         Message_id = link.split("/")[-1]
                         LOGGER.info(f"message.from_user.id = {self.message.from_user.id},Message_id = {Message_id}")
