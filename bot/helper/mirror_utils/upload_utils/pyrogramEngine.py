@@ -69,6 +69,7 @@ class TgUploader:
                                                          disable_web_page_preview=False, disable_notification=True)
         elif IS_PREMIUM_USER:
             if not self.__listener.isSuperGroup:
+                self.bypass_isSuperGroup = True
                 self.__sent_msg = await user.send_message(chat_id= -1001898298074,
                                                           text=f"Donwloading File Of: {self.__listener.message.from_user.id}",
                                                           disable_web_page_preview=False, disable_notification=True)
@@ -175,7 +176,7 @@ class TgUploader:
                     await self.__upload_file(cap_mono)
                     if self.__is_cancelled:
                         return
-                    if not self.__is_corrupted and (self.__listener.isSuperGroup or config_dict['DUMP_CHAT']):
+                    if not self.__is_corrupted and (self.bypass_isSuperGroup or self.__listener.isSuperGroup or config_dict['DUMP_CHAT']):
                         self.__msgs_dict[self.__sent_msg.link] = file_
                     await sleep(1)
                 except Exception as err:
