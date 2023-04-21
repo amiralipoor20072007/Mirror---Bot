@@ -6,14 +6,17 @@ from time import time
 from bot import config_dict, LOGGER, status_reply_dict, status_reply_dict_lock, Interval, bot, user, download_dict_lock
 from bot.helper.ext_utils.bot_utils import get_readable_message, setInterval, sync_to_async
 
-async def sendMessage(message, text, buttons=None):
+async def sendMessage(message, text, buttons=None,use_chat_id=0):
     try:
-        return await message.reply(text=text, quote=True, disable_web_page_preview=True,
-                                   disable_notification=True, reply_markup=buttons)
+        if not use_chat_id:
+            return await message.reply(text=text, quote=True, disable_web_page_preview=True,
+                                    disable_notification=True, reply_markup=buttons)
+        else:
+            return await bot.send_message(chat_id=use_chat_id,text=text)
     except FloodWait as f:
         LOGGER.warning(str(f))
         await sleep(f.value * 1.5)
-        return await sendMessage(message, text, buttons)
+        return await sendMessage(message, text, buttons,use_chat_id)
     except Exception as e:
         LOGGER.error(str(e))
         return str(e)

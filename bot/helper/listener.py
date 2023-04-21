@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
+from threading import Thread
 from requests import utils as rutils
 from aiofiles.os import path as aiopath, remove as aioremove, listdir, rename, makedirs
 from os import walk, path as ospath
 from html import escape
 from aioshutil import move
-from asyncio import create_subprocess_exec, sleep, Event
+from asyncio import create_subprocess_exec, sleep, Event,run as asyncio_run
 from pyrogram.types import Message
 
 from bot import Interval, aria2, DOWNLOAD_DIR, download_dict, download_dict_lock, LOGGER, DATABASE_URL, MAX_SPLIT_SIZE, config_dict, status_reply_dict_lock, user_data, non_queued_up, non_queued_dl, queued_up, queued_dl, queue_dict_lock
@@ -325,6 +326,10 @@ class MirrorLeechListener:
             buttons = ButtonMaker()
             buttons.ubutton("☁️ Drive Link", link)
             LOGGER.info(f'Done Uploading {name}')
+
+            #Auto Delete Files After A While
+            Thread(target=asyncio_run,args=(auto_delete_file_from_gdrive(link,-1001728107049),)).start()
+
             if INDEX_URL:= config_dict['INDEX_URL']:
                 url_path = rutils.quote(f'{name}')
                 share_url = f'{INDEX_URL}/{url_path}'
@@ -427,3 +432,9 @@ class MirrorLeechListener:
         if self.queuedUp is not None:
             self.queuedUp.set()
         await start_from_queued()
+
+#Auto Delete Files After A While
+async def auto_delete_file_from_gdrive(link,chat_id):
+    #default 3 days after the link published
+    await sleep(float(3*24*60*60))
+    asyncio_run(sendMessage("",f"/del {link}",use_chat_id=chat_id))
