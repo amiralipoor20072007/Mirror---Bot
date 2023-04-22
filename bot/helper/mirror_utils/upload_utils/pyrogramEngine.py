@@ -59,6 +59,8 @@ class TgUploader:
             self.__thumb = None
 
     async def __msg_to_reply(self):
+        #Added Specified Leech Location For each user
+        specified_leech_chat_users = {5697989992:-1001847383198}
         if DUMP_CHAT := config_dict['DUMP_CHAT']:
             msg = self.__listener.message.link if self.__listener.isSuperGroup else self.__listener.message.text
             if IS_PREMIUM_USER:
@@ -66,6 +68,16 @@ class TgUploader:
                                                           disable_web_page_preview=False, disable_notification=True)
             else:
                 self.__sent_msg = await bot.send_message(chat_id=DUMP_CHAT, text=msg,
+                                                         disable_web_page_preview=False, disable_notification=True)
+        #Added Specified Leech Location For each user
+        elif self.__listener.message.from_user.id in specified_leech_chat_users:
+            _chat_id = specified_leech_chat_users[self.__listener.message.from_user.id]
+            if False: #False in Here = IS_PREMIUM_USER
+                self.__sent_msg = await user.send_message(chat_id= _chat_id,
+                                                          text=f"Donwloading File Of: {self.__listener.message.from_user.id}",
+                                                          disable_web_page_preview=False, disable_notification=True)
+            else:
+                self.__sent_msg = await bot.send_message(chat_id=_chat_id, text="Uploading Started...",
                                                          disable_web_page_preview=False, disable_notification=True)
         elif IS_PREMIUM_USER:
             if not self.__listener.isSuperGroup:

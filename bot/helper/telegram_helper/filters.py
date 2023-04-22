@@ -20,7 +20,7 @@ class CustomFilters:
         
         #added for auto delete files from gdrive and bot will send a message to itself
         from_bot = True if uid == 6082872684 or chat_id == 6082872684 else False
-
+        #permission to leech in pv for member of a chat
         for i in [-1001923653712,-1001964898247]:
             try:
                 member = bool(await client.get_chat_member(i,uid))
