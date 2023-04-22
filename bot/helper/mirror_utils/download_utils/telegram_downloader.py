@@ -92,6 +92,7 @@ class TelegramDownloadHelper:
             await self.__onDownloadError('Internal error occurred')
 
     async def add_download(self, message, path, filename, from_queue=False,multi=False):
+        self.__start_time = time()
         if IS_PREMIUM_USER:
             if not self.__listener.isSuperGroup:
                 await sendMessage(message, 'Downloading With Bot Account!')
