@@ -16,6 +16,10 @@ from pymongo import MongoClient
 from pyrogram import Client as tgClient, enums
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from tzlocal import get_localzone
+import sys
+
+#added for reaching rescui limit in multi_tasks
+sys.setrecursionlimit(10000)
 
 faulthandler_enable()
 

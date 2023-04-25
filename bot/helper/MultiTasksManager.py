@@ -60,7 +60,15 @@ class Multi_Tasks_Manager():
                                             self,self.time)
 
     async def get_messages(self):
-        all_messages  = await self.client.get_messages(self.chat_id, list(range(self.start_id + 1,self.end_id)))
+        list_ = list(range(self.start_id + 1,self.end_id))
+        while len(list_) > 190:
+            await self._get_messages(list_[:190])
+            del list_[:190]
+        if len(list_) >= 1:
+            await self._get_messages(list_)
+        
+    async def _get_messages(self,list_of_message_ids):
+        all_messages  = await self.client.get_messages(self.chat_id,list_of_message_ids)
 
         for message in all_messages:
             message : Message
@@ -68,11 +76,12 @@ class Multi_Tasks_Manager():
                  message.voice or message.video_note or message.sticker or message.animation or None
             
             if media is None:
-                #Text - URLs
-                splitted_text = message.text.split('\n')
-                for text in splitted_text:
-                    if is_url(text):
-                        self.urls.append(text)
+                if message is not None:
+                    #Text - URLs
+                    splitted_text = message.text.split('\n')
+                    for text in splitted_text:
+                        if is_url(text):
+                            self.urls.append(text)
             else:
                 #Medias
                 self.medias.append(message)
