@@ -1,7 +1,6 @@
 import datetime
-from threading import Lock
 from pyrogram.types import Message 
-from asyncio import sleep
+from asyncio import sleep , Lock
 
 from bot import DOWNLOAD_DIR, tgClient ,LOGGER
 from bot.helper.ext_utils.bot_utils import is_url
