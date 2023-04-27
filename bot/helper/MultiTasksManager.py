@@ -1,6 +1,7 @@
 import datetime
 from threading import Lock
 from pyrogram.types import Message 
+from asyncio import sleep
 
 from bot import DOWNLOAD_DIR, tgClient ,LOGGER
 from bot.helper.ext_utils.bot_utils import is_url
@@ -11,6 +12,7 @@ from bot.helper.mirror_utils.download_utils.telegram_downloader import \
     TelegramDownloadHelper
 from bot.helper.telegram_helper.message_utils import sendMessage
 
+urls_lock = Lock()
 medias_lock = Lock()
 
 
@@ -96,14 +98,20 @@ class Multi_Tasks_Manager():
     
     async def downloader_urls(self):
         if self.urls:
-            await add_aria2c_download(self.urls[0], self.listener.dir, self.listener, None,self.auth,None,None)
-            del self.urls[0]
+            async with urls_lock:
+                url = self.urls[0]
+                del self.urls[0]
+            await add_aria2c_download(url, self.listener.dir, self.listener, None,self.auth,None,None)
 
     async def downloader_medias(self):
         if self.medias:
-            await self.TelegramDownloadHelper.add_download(self.medias.pop(), f'{self.listener.dir}/', "",multi=True)
+            async with medias_lock:
+                media = self.medias[0]
+                del self.medias[0]
+            await self.TelegramDownloadHelper.add_download(media, f'{self.listener.dir}/', "",multi=True)
     
     async def downloader(self):
+        await sleep(1)
         if self.urls:
             await self.downloader_urls()
             return
@@ -121,7 +129,7 @@ class Multi_Tasks_Manager():
         await self.get_messages()
         self.total_tasks = len(self.medias) + len(self.urls)
         if self.check_not_empty():
-            await sendMessage(self.end,"<b>Started To Do Your Tasks One by One!</b>")
+            await sendMessage(self.end,"<b>Started To Do Your Tasks One by One!</b>\nA 1s delay Between your tasks will showen")
             if self.medias:
                 self.TelegramDownloadHelper = TelegramDownloadHelper(self.listener)
             await self.downloader()
