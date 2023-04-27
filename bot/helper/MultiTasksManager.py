@@ -51,7 +51,7 @@ class Multi_Tasks_Manager():
         if self.isLeech :
             text += f"\nLeech Files : ✅"
 
-        async_run(sendMessage(self.start,))
+        async_run(sendMessage(self.start,text))
 
     def status_str(self):
         return f"\nRemaining Tasks {len(self.medias)+len(self.urls)}/{self.total_tasks}"
