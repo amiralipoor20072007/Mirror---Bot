@@ -284,6 +284,7 @@ async def Multi_Zip_Start(client, message:Message):
 
     Multi_Task = Multi_Tasks_Manager(client,chat_id=message.chat.id,start_message=message,
                                      isZip=True,pswd=pswdd,authen=auth)
+    await Multi_Task.send_listening_message()
     
     async with multi_task_manager_dict_lock :
         multi_task_manager_dict[message.from_user.id] = Multi_Task
@@ -304,6 +305,7 @@ async def Multi_Leech_Start(client, message):
 
     Multi_Task = Multi_Tasks_Manager(client,chat_id=message.chat.id,start_message=message,
                                      isLeech=True,pswd=pswdd,authen=auth)
+    await Multi_Task.send_listening_message()
     
     async with multi_task_manager_dict_lock :
         multi_task_manager_dict[message.from_user.id] = Multi_Task
@@ -323,6 +325,7 @@ async def Multi_Zip_Leech_Start(client, message):
 
     Multi_Task = Multi_Tasks_Manager(client,chat_id=message.chat.id,start_message=message,isZip=True,
                                      isLeech=True,pswd=pswdd,authen=auth)
+    await Multi_Task.send_listening_message()
     
     async with multi_task_manager_dict_lock :
         multi_task_manager_dict[message.from_user.id] = Multi_Task
