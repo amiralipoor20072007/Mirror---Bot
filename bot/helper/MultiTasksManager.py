@@ -1,6 +1,6 @@
 import datetime
 from pyrogram.types import Message 
-from asyncio import sleep , Lock
+from asyncio import sleep , Lock,run as async_run
 
 from bot import DOWNLOAD_DIR, tgClient ,LOGGER
 from bot.helper.ext_utils.bot_utils import is_url
@@ -22,7 +22,7 @@ class Multi_Tasks_Manager():
         self.auth = authen
         self.client : tgClient
         self.client = Client
-        self.start_id = start_message.id
+        self.start_id = start_message.id + 1 
         self.start = start_message
         self.chat_id = chat_id
         self.urls = []
@@ -40,6 +40,18 @@ class Multi_Tasks_Manager():
         self.extract = extract
         self.pswd = pswd
         self.isLeech = isLeech
+        self.send_listening_message()
+
+    def send_listening_message(self):
+        text = "<b>Waiting For Your Tasks!</b>"
+        if self.isZip:
+            text += "\n\nZIP Files : ✅"
+        if self.pswd:
+            text += f"\nPassword For ZIP File : {self.pswd}"
+        if self.isLeech :
+            text += f"\nLeech Files : ✅"
+
+        async_run(sendMessage(self.start,))
 
     def status_str(self):
         return f"\nRemaining Tasks {len(self.medias)+len(self.urls)}/{self.total_tasks}"
