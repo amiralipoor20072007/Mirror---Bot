@@ -50,7 +50,7 @@ class Multi_Tasks_Manager():
             text += f"\nPassword For ZIP File : {self.pswd}"
         if self.isLeech :
             text += f"\nLeech Files : ✅"
-        async_to_sync(sendMessage,(self.start,text))
+        async_to_sync(sendMessage,self.start,text)
 
     def status_str(self):
         return f"\nRemaining Tasks {len(self.medias)+len(self.urls)}/{self.total_tasks}"
