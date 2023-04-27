@@ -3,7 +3,7 @@ from pyrogram.types import Message
 from asyncio import sleep , Lock,run as async_run
 
 from bot import DOWNLOAD_DIR, tgClient ,LOGGER
-from bot.helper.ext_utils.bot_utils import is_url
+from bot.helper.ext_utils.bot_utils import async_to_sync, is_url
 from bot.helper.listener import MirrorLeechListener
 from bot.helper.mirror_utils.download_utils.aria2_download import \
     add_aria2c_download
@@ -50,8 +50,7 @@ class Multi_Tasks_Manager():
             text += f"\nPassword For ZIP File : {self.pswd}"
         if self.isLeech :
             text += f"\nLeech Files : ✅"
-
-        async_run(sendMessage(self.start,text))
+        async_to_sync(sendMessage(self.start,text))
 
     def status_str(self):
         return f"\nRemaining Tasks {len(self.medias)+len(self.urls)}/{self.total_tasks}"
