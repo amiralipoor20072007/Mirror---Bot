@@ -60,7 +60,7 @@ class TgUploader:
 
     async def __msg_to_reply(self):
         #Added Specified Leech Location For each user
-        specified_leech_chat_users = {5697989992:-1001847383198,5999138588:-1001847383198}
+        specified_leech_chat_users = {5697989992:-1001847383198,5999138588:-1001847383198,6244087534:-1001847383198}
         if DUMP_CHAT := config_dict['DUMP_CHAT']:
             msg = self.__listener.message.link if self.__listener.isSuperGroup else self.__listener.message.text
             if IS_PREMIUM_USER:
