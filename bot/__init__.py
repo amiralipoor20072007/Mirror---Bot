@@ -10,6 +10,7 @@ from os import remove as osremove, path as ospath, environ, getcwd
 from subprocess import Popen, run as srun
 from time import sleep, time
 from threading import Thread
+import threading
 from dotenv import load_dotenv, dotenv_values
 from asyncio import Lock
 from pymongo import MongoClient
@@ -20,6 +21,7 @@ import resource, sys
 #added for reaching rescui limit in multi_tasks
 resource.setrlimit(resource.RLIMIT_STACK, (resource.RLIM_INFINITY, resource.RLIM_INFINITY))
 sys.setrecursionlimit(10**6)
+threading.stack_size(2**26)
 
 faulthandler_enable()
 
