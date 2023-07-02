@@ -11,6 +11,7 @@ from pyrogram.filters import command
 from asyncio import create_subprocess_exec
 
 from bot import bot, botStartTime, LOGGER, Interval, DATABASE_URL, user, QbInterval, INCOMPLETE_TASK_NOTIFIER, scheduler
+from bot.helper.mirror_utils.download_utils.aria2_download import start_aria2_listener
 from .helper.ext_utils.fs_utils import start_cleanup, clean_all, exit_clean_up
 from .helper.ext_utils.bot_utils import get_readable_file_size, get_readable_time, cmd_exec, sync_to_async
 from .helper.ext_utils.db_handler import DbManger
@@ -178,6 +179,8 @@ async def main():
                                          disable_notification=True)
                     except Exception as e:
                         LOGGER.error(e)
+
+    await sync_to_async(start_aria2_listener,wait=False)
 
     if await aiopath.isfile(".restartmsg"):
         with open(".restartmsg") as f:

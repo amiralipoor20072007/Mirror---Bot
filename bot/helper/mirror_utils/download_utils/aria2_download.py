@@ -161,8 +161,8 @@ async def __onDownloadError(api, gid):
         listener = dl.listener()
         await listener.onDownloadError(error)
 
-def start_listener():
-    aria2.listen_to_notifications(threaded=True,
+def start_aria2_listener():
+    aria2.listen_to_notifications(threaded=False,
                                   on_download_start=__onDownloadStarted,
                                   on_download_error=__onDownloadError,
                                   on_download_stop=__onDownloadStopped,
@@ -199,5 +199,3 @@ async def add_aria2c_download(link, path, listener, filename, auth, ratio, seed_
     await listener.onDownloadStart()
     if not listener.select:
         await sendStatusMessage(listener.message)
-
-start_listener()
